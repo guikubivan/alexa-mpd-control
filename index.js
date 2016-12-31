@@ -71,6 +71,31 @@ app.intent('playmusiconreceiver', {
   }
 );
 
+app.intent('stopmusic', {
+	  'utterances': ['stop{| music}']
+	},
+  function(req, res) {
+    console.log('stopmusic');
+    var say = mpd.stop();
+    if(say) res.say(say);
+  }
+);
+
+app.intent('playmusicgroup', {
+	  'slots': {
+	    'MUSICGROUP': 'AMAZON.MusicGroup'
+	  },
+	  'utterances': ['{play|listen|listen to}{| some} {-|MUSICGROUP}']
+  },
+  function(req, res){
+    console.log('playgorup', req);
+    var artist = req.slot('MUSICGROUP');
+    console.log(artist);
+
+    res.say(mpd.playArtist(artist));
+  }
+);
+
 for(var i=0; i < builtInIntents.length; ++i) {
   app.intent(builtInIntents[i].name, {}, builtInIntents[i].func);
 }

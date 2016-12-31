@@ -36,12 +36,41 @@ MpdInterface.prototype.playOnHomeTheater = function() {
   });
 };
 
+MpdInterface.prototype.playArtist = function(artist) {
+  client.sendCommand(cmd("stop", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+
+  client.sendCommand(cmd("clear", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+
+  client.sendCommand(cmd("searchadd", ["artist", artist]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+
+  this.play();
+
+  return "Playing " + artist;
+};
 
 MpdInterface.prototype.pause = function() {
   client.sendCommand(cmd("pause", []), function(err, msg) {
     if (err) throw err;
     console.log(msg);
   });
+  return "Aww, no more popping.";
+};
+
+MpdInterface.prototype.stop = function() {
+  client.sendCommand(cmd("stop", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+  return "Aww, no more popping.";
 };
 
 MpdInterface.prototype.next = function() {
