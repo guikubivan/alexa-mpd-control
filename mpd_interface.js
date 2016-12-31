@@ -17,6 +17,8 @@ MpdInterface.prototype.play = function() {
     if (err) throw err;
     console.log(msg);
   });
+
+  return "Haha, keep it popping";
 };
 
 MpdInterface.prototype.playOnHomeTheater = function() {
@@ -36,24 +38,66 @@ MpdInterface.prototype.playOnHomeTheater = function() {
 
 
 MpdInterface.prototype.pause = function() {
-
   client.sendCommand(cmd("pause", []), function(err, msg) {
     if (err) throw err;
     console.log(msg);
   });
 };
 
-MpdInterface.prototype.pause = function() {
-
-  client.sendCommand(cmd("pause", []), function(err, msg) {
+MpdInterface.prototype.next = function() {
+  console.log('next');
+  client.sendCommand(cmd("next", []), function(err, msg) {
     if (err) throw err;
     console.log(msg);
   });
 };
 
-MpdInterface.prototype.stop = function() {
+MpdInterface.prototype.previous = function() {
+  client.sendCommand(cmd("prev", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+};
 
-  client.sendCommand(cmd("stop", []), function(err, msg) {
+MpdInterface.prototype.loopOn = function() {
+  client.sendCommand(cmd("repeat", [1]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+  client.sendCommand(cmd("single", [1]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+  client.sendCommand(cmd("consume", [0]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+};
+
+MpdInterface.prototype.loopOff = function() {
+  client.sendCommand(cmd("repeat", [0]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+  client.sendCommand(cmd("single", [0]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+  client.sendCommand(cmd("consume", [1]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+};
+
+MpdInterface.prototype.shuffleOn = function() {
+  client.sendCommand(cmd("random", [1]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+};
+
+MpdInterface.prototype.shuffleOff = function() {
+  client.sendCommand(cmd("random", [0]), function(err, msg) {
     if (err) throw err;
     console.log(msg);
   });

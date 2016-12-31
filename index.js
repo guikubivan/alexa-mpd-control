@@ -12,6 +12,28 @@ var MpdInterface = require('./mpd_interface');
 var mpd = new MpdInterface();
 
 
+function getMpdTriggerFunction(funcName) {
+  return function(req, res){
+    console.log("Triggered built-in intent: ", funcName);
+    var say = mpd[funcName]();
+    if(say){
+      res.say(say);
+    }
+  }
+}
+
+var builtInIntents = [
+  { name: "AMAZON.PauseIntent", func: getMpdTriggerFunction('pause') },
+  { name: "AMAZON.ResumeIntent", func: getMpdTriggerFunction('play') },
+  { name: "AMAZON.NextIntent", func: getMpdTriggerFunction('next') },
+  { name: "AMAZON.PreviousIntent", func: getMpdTriggerFunction('previous') },
+  { name: "AMAZON.LoopOnIntent", func: getMpdTriggerFunction('loopOn') },
+  { name: "AMAZON.LoopOffIntent", func: getMpdTriggerFunction('loopOff') },
+  { name: "AMAZON.ShuffleOnIntent", func: getMpdTriggerFunction('shuffleOn') },
+  { name: "AMAZON.ShuffleOffIntent", func: getMpdTriggerFunction('shuffleOff') }
+];
+
+
 app.launch(function(req, res) {
   console.log('launch');
   mpd.play();
@@ -49,27 +71,9 @@ app.intent('playmusiconreceiver', {
   }
 );
 
+for(var i=0; i < builtInIntents.length; ++i) {
+  app.intent(builtInIntents[i].name, {}, builtInIntents[i].func);
+}
 
-app.intent('AMAZON.StopIntent', {},
-  function(req, res) {
-    console.log('stop');
-    mpd.stop();
-    res.say("Awwwww, no more popping.");
-  }
-);
-
-app.intent('AMAZON.PauseIntent', {},
-  function(req, res) {
-    console.log('pause');
-    mpd.pause();
-  }
-);
-
-app.intent('AMAZON.ResumeIntent', {},
-  function(req, res) {
-    console.log('resume');
-    mpd.play();
-  }
-);
 
 module.exports = app;
