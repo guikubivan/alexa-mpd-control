@@ -96,6 +96,22 @@ app.intent('playmusicgroup', {
   }
 );
 
+app.intent('whatisplaying', {
+    'utterances': ["{what is|what's} playing"]
+  },
+  function(req, res){
+    res.say(mpd.whatIsPlaying());
+  }
+);
+
+app.intent('randalbum', {
+    'utterances': ["random album"]
+  },
+  function(req, res){
+    res.say(mpd.playRandomAlbum());
+  }
+);
+
 for(var i=0; i < builtInIntents.length; ++i) {
   app.intent(builtInIntents[i].name, {}, builtInIntents[i].func);
 }

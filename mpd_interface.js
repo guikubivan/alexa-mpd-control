@@ -7,10 +7,57 @@ var client = mpd.connect({
   host: '192.168.0.50',
 });
 
+var mpdInfo = {
+  stats: {}
+};
 
+client.on('ready', function() {
+  client.sendCommand(cmd("stats", []), function(err, msg) {
+    if (err) throw err;
+    var tmp = convertListToObject(msg);
+    mpdInfo.stats.artistCount = parseInt(tmp.artists);
+    mpdInfo.stats.albumCount = parseInt(tmp.albums);
+    mpdInfo.stats.songCount = parseInt(tmp.songs);
+  });
+});
+
+
+var retrieveStatusInterval = setInterval(function() {
+  client.sendCommand(cmd("status", []), function(err, msg) {
+    if (err) throw err;
+    var tmp = convertListToObject(msg);
+    mpdInfo.volume = parseInt(tmp.volume);
+  });
+}, 1000);
+
+
+var retrieveSongInfoInterval = setInterval(function() {
+  client.sendCommand(cmd("currentsong", []), function(err, msg) {
+    if (err) throw err;
+    var tmp = convertListToObject(msg);
+    mpdInfo.artist = tmp.Artist;
+    mpdInfo.title = tmp.Title;
+  });
+}, 1000);
+
+
+function convertListToObject(myString){
+  var lines = myString.split("\n");
+  var newObject = {};
+
+  for(var i=0; i<lines.length; ++i){
+    if(lines[i]){
+      var tmp = lines[i].split(/^([^:]+):\s*(.*)\s*$/)
+      newObject[tmp[1]] = tmp[2];
+    }
+  }
+  return newObject;
+}
+
+
+// clearInterval(interval);
 
 function MpdInterface() { }
-
 
 MpdInterface.prototype.play = function() {
   client.sendCommand(cmd("play", []), function(err, msg) {
@@ -37,15 +84,7 @@ MpdInterface.prototype.playOnHomeTheater = function() {
 };
 
 MpdInterface.prototype.playArtist = function(artist) {
-  client.sendCommand(cmd("stop", []), function(err, msg) {
-    if (err) throw err;
-    console.log(msg);
-  });
-
-  client.sendCommand(cmd("clear", []), function(err, msg) {
-    if (err) throw err;
-    console.log(msg);
-  });
+  this.stopAndClear();
 
   client.sendCommand(cmd("searchadd", ["artist", artist]), function(err, msg) {
     if (err) throw err;
@@ -55,6 +94,43 @@ MpdInterface.prototype.playArtist = function(artist) {
   this.play();
 
   return "Playing " + artist;
+};
+
+MpdInterface.prototype.stopAndClear = function(artist) {
+  client.sendCommand(cmd("stop", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+
+  client.sendCommand(cmd("clear", []), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
+  });
+};
+
+
+MpdInterface.prototype.whatIsPlaying = function() {
+  return "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
+};
+
+MpdInterface.prototype.playRandomAlbum = function(){
+  var thisInstance = this;
+  //list album command has empty first line
+  var albumIndex = Math.floor(Math.random() * (mpdInfo.stats.albumCount + 1)) + 1;
+  client.sendCommand(cmd("list", ["album"]), function(err, msg) {
+    if (err) throw err;
+    var lines = msg.split("\n");
+    var albumName = lines[albumIndex];
+    thisInstance.stopAndClear();
+
+    client.sendCommand(cmd("searchadd", ["album", albumName]), function(err, msg) {
+      if (err) throw err;
+      console.log(msg);
+    });
+
+    thisInstance.play();
+  });
+  return "Enjoy.";
 };
 
 MpdInterface.prototype.pause = function() {
