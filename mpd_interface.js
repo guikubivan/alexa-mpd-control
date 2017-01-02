@@ -1,7 +1,11 @@
 'use strict';
 
+var Speech = require('ssml-builder');
+var speech = new Speech();
+
 var mpd = require('mpd'),
-    cmd = mpd.cmd
+    cmd = mpd.cmd;
+
 var client = mpd.connect({
   port: 6600,
   host: '192.168.0.50',
@@ -84,7 +88,8 @@ MpdInterface.prototype.playOnHomeTheater = function() {
 };
 
 MpdInterface.prototype.playArtist = function(artist) {
-  this.stopAndClear();
+  this.stop();
+  this.clearCurrentPlaylist();
 
   client.sendCommand(cmd("searchadd", ["artist", artist]), function(err, msg) {
     if (err) throw err;
@@ -96,12 +101,7 @@ MpdInterface.prototype.playArtist = function(artist) {
   return "Playing " + artist;
 };
 
-MpdInterface.prototype.stopAndClear = function(artist) {
-  client.sendCommand(cmd("stop", []), function(err, msg) {
-    if (err) throw err;
-    console.log(msg);
-  });
-
+MpdInterface.prototype.clearCurrentPlaylist = function(artist) {
   client.sendCommand(cmd("clear", []), function(err, msg) {
     if (err) throw err;
     console.log(msg);
@@ -110,7 +110,11 @@ MpdInterface.prototype.stopAndClear = function(artist) {
 
 
 MpdInterface.prototype.whatIsPlaying = function() {
-  return "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
+  var resp = "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
+  var speech = new Speech();
+  speech.say(resp);
+  console.log(speech.ssml(true));
+  return speech.ssml(true);
 };
 
 MpdInterface.prototype.playRandomAlbum = function(){
@@ -120,14 +124,16 @@ MpdInterface.prototype.playRandomAlbum = function(){
   client.sendCommand(cmd("list", ["album"]), function(err, msg) {
     if (err) throw err;
     var lines = msg.split("\n");
-    var albumName = lines[albumIndex];
-    thisInstance.stopAndClear();
+    var albumName = convertListToObject(lines[albumIndex]).Album;
 
+    thisInstance.stop();
+    thisInstance.clearCurrentPlaylist();
     client.sendCommand(cmd("searchadd", ["album", albumName]), function(err, msg) {
       if (err) throw err;
       console.log(msg);
     });
 
+    console.log("Playing Random Album: " + albumName);
     thisInstance.play();
   });
   return "Enjoy.";
