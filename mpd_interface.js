@@ -110,15 +110,25 @@ MpdInterface.prototype.whatIsPlaying = function() {
   return "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
 };
 
-MpdInterface.prototype.playRandomAlbum = function(){
-  var thisInstance = this;
-  //list album command has empty first line
-  var albumIndex = Math.floor(Math.random() * (mpdInfo.stats.albumCount + 1)) + 1;
-  client.sendCommand(cmd("list", ["album"]), function(err, msg) {
-    if (err) throw err;
-    var lines = msg.split("\n");
-    var albumName = convertListToObject(lines[albumIndex]).Album;
+/* Returns a promise */
+MpdInterface.prototype.getRandomAlbumName = function(){
+  var promise = new Promise(
+    function(resolve, reject) {
+      var albumIndex = Math.floor(Math.random() * (mpdInfo.stats.albumCount + 1)) + 1;
+      client.sendCommand(cmd("list", ["album"]), function(err, msg) {
+        if (err) throw err;
+        var lines = msg.split("\n");
+        var albumName = convertListToObject(lines[albumIndex]).Album;
+        resolve(albumName);
+      });
+    }
+  );
 
+  return promise;
+};
+
+MpdInterface.prototype.playRandomAlbum = function(){
+  this.getRandomAlbumName().then(function(albumName){
     thisInstance.stop();
     thisInstance.clearCurrentPlaylist();
     client.sendCommand(cmd("searchadd", ["album", albumName]), function(err, msg) {
@@ -129,6 +139,7 @@ MpdInterface.prototype.playRandomAlbum = function(){
     console.log("Playing Random Album: " + albumName);
     thisInstance.play();
   });
+
   return "Enjoy.";
 };
 
