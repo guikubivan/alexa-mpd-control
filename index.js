@@ -98,13 +98,17 @@ app.intent('playmusicgroup', {
   }
 );
 
+function cleanResp(resp){
+  var speech = new Speech();
+  speech.say(resp);
+  return speech.ssml(true);
+}
+
 app.intent('whatisplaying', {
     'utterances': ["{what is|what's} playing"]
   },
   function(req, res){
-    var speech = new Speech();
-    speech.say(mpd.whatIsPlaying());
-    res.say(speech.ssml(true));
+    res.say(cleanResp(mpd.whatIsPlaying()));
   }
 );
 
@@ -112,7 +116,7 @@ app.intent('randalbum', {
     'utterances': ["random album"]
   },
   function(req, res){
-    res.say(mpd.playRandomAlbum());
+    res.say(cleanResp(mpd.playRandomAlbum(req.data.randalbum)));
   }
 );
 

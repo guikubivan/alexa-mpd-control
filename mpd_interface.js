@@ -127,20 +127,18 @@ MpdInterface.prototype.getRandomAlbumName = function(){
   return promise;
 };
 
-MpdInterface.prototype.playRandomAlbum = function(){
-  this.getRandomAlbumName().then(function(albumName){
-    thisInstance.stop();
-    thisInstance.clearCurrentPlaylist();
-    client.sendCommand(cmd("searchadd", ["album", albumName]), function(err, msg) {
-      if (err) throw err;
-      console.log(msg);
-    });
-
-    console.log("Playing Random Album: " + albumName);
-    thisInstance.play();
+MpdInterface.prototype.playRandomAlbum = function(albumName){
+  this.stop();
+  this.clearCurrentPlaylist();
+  client.sendCommand(cmd("searchadd", ["album", albumName]), function(err, msg) {
+    if (err) throw err;
+    console.log(msg);
   });
 
-  return "Enjoy.";
+  this.play();
+  var resp = "Playing album: " + albumName;
+
+  return resp;
 };
 
 MpdInterface.prototype.pause = function() {
