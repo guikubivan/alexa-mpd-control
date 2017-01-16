@@ -122,7 +122,7 @@ MpdInterface.prototype.getRandomAlbum = function(){
 
       thisInstance.getAlbumArtist(albumName).then(function(albumArtist){
         resolve({
-          name: albumName
+          name: albumName,
           artist: albumArtist
         });
       });
