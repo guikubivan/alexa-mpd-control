@@ -1,8 +1,5 @@
 'use strict';
 
-var Speech = require('ssml-builder');
-var speech = new Speech();
-
 var mpd = require('mpd'),
     cmd = mpd.cmd;
 
@@ -110,11 +107,7 @@ MpdInterface.prototype.clearCurrentPlaylist = function(artist) {
 
 
 MpdInterface.prototype.whatIsPlaying = function() {
-  var resp = "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
-  var speech = new Speech();
-  speech.say(resp);
-  console.log(speech.ssml(true));
-  return speech.ssml(true);
+  return "Playing " + mpdInfo.title + " by " + mpdInfo.artist;
 };
 
 MpdInterface.prototype.playRandomAlbum = function(){

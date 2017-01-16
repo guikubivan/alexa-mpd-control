@@ -5,6 +5,8 @@ module.change_code = 1;
 // var _ = require('lodash');
 
 var Alexa = require('alexa-app');
+var Speech = require('ssml-builder');
+var speech = new Speech();
 
 var app = new Alexa.app('mpdcontrol');
 
@@ -100,7 +102,9 @@ app.intent('whatisplaying', {
     'utterances': ["{what is|what's} playing"]
   },
   function(req, res){
-    res.say(mpd.whatIsPlaying());
+    var speech = new Speech();
+    speech.say(mpd.whatIsPlaying());
+    res.say(speech.ssml(true));
   }
 );
 
