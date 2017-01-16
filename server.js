@@ -12,16 +12,16 @@ AlexaAppServer.start({
 //    app_dir:"apps",            // Where alexa-app modules are stored
 //    app_root:"/alexa/",        // Service root
   preRequest: function(json,req,res) {
-  	console.log("preRequest fired", json.request.intent && json.request.intent.name);
-  	json.userDetails = { "name":"Bob Smith" };
+    console.log("preRequest fired", json.request.intent && json.request.intent.name);
+    json.userDetails = { "name":"Bob Smith" };
 
     var retPromise = new Promise(function(resolve, reject){
-    	if(json.request.intent && json.request.intent.name === "randalbum"){
-    	  mpd.getRandomAlbumName().then(function(albumInfo){
+      if(json.request.intent && json.request.intent.name === "randalbum"){
+        mpd.getRandomAlbumName().then(function(albumInfo){
            json[json.request.intent.name] = albumInfo;
           resolve(json);
-     	  });
-    	}else{
+        });
+      }else{
         resolve(json);
       }
     });
