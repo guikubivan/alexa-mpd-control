@@ -139,7 +139,7 @@ MpdInterface.prototype.getAlbumArtist = function(albumName){
         if (err) throw err;
         var tmp = convertListToObject(msg);
 
-        resolve(tmp.AlbumArtist);
+        resolve(tmp.Artist);
       });
     }
   );
