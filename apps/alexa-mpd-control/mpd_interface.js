@@ -132,7 +132,7 @@ MpdInterface.prototype.getRandomAlbum = function(){
   return promise;
 };
 
-MpdInterface.protottype.getAlbumArtist = function(albumName){
+MpdInterface.prototype.getAlbumArtist = function(albumName){
   var promise = new Promise(
     function(resolve, reject) {
       client.sendCommand(cmd("search", ["album", albumName]), function(err, msg) {
