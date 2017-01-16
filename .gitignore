@@ -1,1 +1,3 @@
 node_modules
+sslcert/*.pem
+sslcert/*.cnf
