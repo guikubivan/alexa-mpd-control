@@ -17,7 +17,7 @@ AlexaAppServer.start({
 
     var retPromise = new Promise(function(resolve, reject){
       if(json.request.intent && json.request.intent.name === "randalbum"){
-        mpd.getRandomAlbumName().then(function(albumInfo){
+        mpd.getRandomAlbum().then(function(albumInfo){
            json[json.request.intent.name] = albumInfo;
           resolve(json);
         });
