@@ -113,23 +113,21 @@ MpdInterface.prototype.whatIsPlaying = function() {
 /* Returns a promise */
 MpdInterface.prototype.getRandomAlbum = function(){
   var thisInstance = this;
-  var promise = new Promise(
-    function(resolve, reject) {
-      var albumIndex = Math.floor(Math.random() * (mpdInfo.stats.albumCount + 1)) + 1;
-      client.sendCommand(cmd("list", ["album"]), function(err, msg) {
-        if (err) throw err;
-        var lines = msg.split("\n");
-        var albumName = convertListToObject(lines[albumIndex]).Album;
+  var promise = new Promise(function(resolve, reject) {
+    var albumIndex = Math.floor(Math.random() * (mpdInfo.stats.albumCount + 1)) + 1;
+    client.sendCommand(cmd("list", ["album"]), function(err, msg) {
+      if (err) throw err;
+      var lines = msg.split("\n");
+      var albumName = convertListToObject(lines[albumIndex]).Album;
 
-        this.getAlbumArtist(albumName).then((albumArtist) => {
-          resolve({
-            name: albumName
-            artist: albumArtist
-          });
+      thisInstance.getAlbumArtist(albumName).then(function(albumArtist){
+        resolve({
+          name: albumName
+          artist: albumArtist
         });
       });
-    }
-  );
+    });
+  });
 
   return promise;
 };
