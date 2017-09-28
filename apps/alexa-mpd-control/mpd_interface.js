@@ -118,14 +118,20 @@ MpdInterface.prototype.getRandomAlbum = function(){
     client.sendCommand(cmd("list", ["album"]), function(err, msg) {
       if (err) throw err;
       var lines = msg.split("\n");
-      var albumName = convertListToObject(lines[albumIndex]).Album;
+      var randAlbumLine = lines[albumIndex];
+      if(randAlbumLine){
+        var albumName = convertListToObject(randAlbumLine).Album;
 
-      thisInstance.getAlbumArtist(albumName).then(function(albumArtist){
-        resolve({
-          name: albumName,
-          artist: albumArtist
+        thisInstance.getAlbumArtist(albumName).then(function(albumArtist){
+          resolve({
+            name: albumName,
+            artist: albumArtist
+          });
         });
-      });
+      }else{
+        console.log('empty album?');
+        resolve({});
+      }
     });
   });
 
