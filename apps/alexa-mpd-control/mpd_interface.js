@@ -5,7 +5,7 @@ var mpd = require('mpd'),
 
 var client = mpd.connect({
   port: 6600,
-  host: '192.168.0.50',
+  host: '127.0.0.1',
 });
 
 var mpdInfo = {
@@ -63,25 +63,25 @@ function MpdInterface() { }
 MpdInterface.prototype.play = function() {
   client.sendCommand(cmd("play", []), function(err, msg) {
     if (err) throw err;
-    console.log(msg);
   });
 
   return "Haha, keep it popping";
 };
 
 MpdInterface.prototype.playOnHomeTheater = function() {
+  var thisInterface = this;
   client.sendCommand(cmd("enableoutput", [0]), function(err, msg) {
     if (err){
       console.log(err);
       throw err;
      }
-    console.log(msg);
+     
+     // Home Theaters usually take a bit to turn on
+     setTimeout(function() {
+       thisInterface.play();
+     }, 500);
   });
 
-  client.sendCommand(cmd("play", []), function(err, msg) {
-    if (err) throw err;
-    console.log(msg);
-  });
 };
 
 MpdInterface.prototype.playArtist = function(artist) {
