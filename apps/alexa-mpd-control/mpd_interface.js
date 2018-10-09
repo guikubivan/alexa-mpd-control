@@ -1,11 +1,12 @@
 'use strict';
 
+var config = require('config');
 var mpd = require('mpd'),
     cmd = mpd.cmd;
 
 var client = mpd.connect({
-  port: 6600,
-  host: '127.0.0.1',
+  port: config.get('mpd.host'),
+  host: config.get('mpd.port')
 });
 
 var mpdInfo = {
@@ -75,7 +76,7 @@ MpdInterface.prototype.playOnHomeTheater = function() {
       console.log(err);
       throw err;
      }
-     
+
      // Home Theaters usually take a bit to turn on
      setTimeout(function() {
        thisInterface.play();
