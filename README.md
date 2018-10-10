@@ -7,13 +7,13 @@ Note trigger word is set when setting up skill in amazon's Alexa developer conso
 
 ## Config
 
-For production (or any other env), just create a new production.json (or env.json) file in config/ with the appropriate mpd info.
+For production (or any other env), just create a new production.json (or env.json) file in config/ with the port to use and the appropriate mpd info. Config values will cascade down from default.json if not set.
 
 ## Launching
 
-Just make sure to set the PORT and NODE_ENV variables:
+Just make sure to set the NODE_ENV variable:
 
-`PORT=[port] NODE_ENV=[environment] node server.js`
+`NODE_ENV=[environment] node server.js`
 
 ## SSL config
 If you're using some kind of proxy server like NGINX, you probably don't need to configure SSL certificates. If you use node server directly, copy your certificate files to the `sslcert` folder as follows:
