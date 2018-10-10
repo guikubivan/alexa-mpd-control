@@ -4,12 +4,13 @@ var AlexaAppServer = require('alexa-app-server');
 
 var MpdInterface = require('./apps/alexa-mpd-control/mpd_interface');
 var mpd = new MpdInterface();
-
+var config = require('config');
 
 AlexaAppServer.start({
-//    server_root:__dirname,     // Path to root
+  port: config.get('port'),
+  server_root:__dirname,     // Path to root
 //    public_html:"public_html", // Static content
-//    app_dir:"apps",            // Where alexa-app modules are stored
+  app_dir:"apps",            // Where alexa-app modules are stored
 //    app_root:"/alexa/",        // Service root
   preRequest: function(json,req,res) {
     console.log("preRequest fired", json.request.intent && json.request.intent.name);
@@ -27,7 +28,10 @@ AlexaAppServer.start({
     });
     return retPromise;
   },
-  port:8092,                 // What port to use, duh
+  // Add a dummy attribute to the response
+  postRequest: function(json, req, res) {
+    json.dummy = "text";
+  },
   httpsPort:443,
   httpsEnabled:true,
   privateKey:'private-key.pem',
