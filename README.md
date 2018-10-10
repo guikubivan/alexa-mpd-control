@@ -7,7 +7,7 @@ Note trigger word is set when setting up skill in amazon's Alexa developer conso
 
 ## Config
 
-For production (or any other env), just create a new production.json (or env.json) file in config/ with the port to use and the appropriate mpd info. Config values will cascade down from default.json if not set.
+For production (or any other env), just create a new production.json (or env.json) file in `config/` with the port to use and the appropriate mpd info. Config values will cascade down from default.json if not set.
 
 ## Launching
 
