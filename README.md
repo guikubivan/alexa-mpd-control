@@ -1,7 +1,7 @@
 # alexa-mpd-control
 Alexa app skill for mpd control: "Alexa, start Jukebox".
 
-Includes intents for "play", "pause", "play [group]", "what is playing", "play random album", "what's playing", 'shuffle on/off', "loop on/off", and "play on receiver" (set output in config).
+Includes intents for "play", "pause", "play [group]", "play random album", "what's playing", 'shuffle on/off', "loop on/off", and "play on receiver" (set output in config).
 
 Note trigger word is set when setting up skill in amazon's Alexa developer console.
 
