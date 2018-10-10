@@ -66,12 +66,18 @@ MpdInterface.prototype.play = function() {
     if (err) throw err;
   });
 
-  return "Haha, keep it popping";
+  return "Playback started.";
 };
 
-MpdInterface.prototype.playOnHomeTheater = function() {
+MpdInterface.prototype.playOnAVReceiver = function() {
   var thisInterface = this;
-  client.sendCommand(cmd("enableoutput", [0]), function(err, msg) {
+  var configKey = 'mpd.av_receiver_output';
+  if (!config.has(configKey)) {
+    return false;
+  }
+
+  var receiverOutput = config.get(configKey);
+  client.sendCommand(cmd("enableoutput", [parseInt(receiverOutput)]), function(err, msg) {
     if (err){
       console.log(err);
       throw err;
@@ -82,7 +88,7 @@ MpdInterface.prototype.playOnHomeTheater = function() {
        thisInterface.play();
      }, 500);
   });
-
+  return true;
 };
 
 MpdInterface.prototype.playArtist = function(artist) {
@@ -173,7 +179,7 @@ MpdInterface.prototype.pause = function() {
     if (err) throw err;
     console.log(msg);
   });
-  return "Aww, no more popping.";
+  return "Playback paused.";
 };
 
 MpdInterface.prototype.stop = function() {
@@ -181,7 +187,7 @@ MpdInterface.prototype.stop = function() {
     if (err) throw err;
     console.log(msg);
   });
-  return "Aww, no more popping.";
+  return "Playback stopped.";
 };
 
 MpdInterface.prototype.next = function() {

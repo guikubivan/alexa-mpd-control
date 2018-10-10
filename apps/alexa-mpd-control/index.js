@@ -38,8 +38,7 @@ var builtInIntents = [
 
 app.launch(function(req, res) {
   console.log('launch');
-  mpd.play();
-  var prompt = 'Haha, keep it popping!';
+  var prompt = mpd.play();
   res.say(prompt).reprompt(prompt).shouldEndSession(true);
 });
 
@@ -58,8 +57,7 @@ app.intent('playmusic', {
 	},
   function(req, res) {
     console.log('playmusic');
-    mpd.play();
-    res.say("Haha, keep it popping.");
+    res.say(mpd.play());
   }
 );
 
@@ -67,9 +65,11 @@ app.intent('playmusiconreceiver', {
 	  'utterances': ['play{| music} on receiver']
 	},
   function(req, res) {
-    console.log('playmusiconreceiver');
-    mpd.playOnHomeTheater();
-    res.say("Meesa play on big sound.");
+    if(mpd.playOnAVReceiver()) {
+      res.say("Playing on receiver.");
+    } else {
+      res.say("Receiver output not configured.");
+    }
   }
 );
 
