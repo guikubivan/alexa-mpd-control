@@ -1,3 +1,5 @@
 node_modules
 sslcert/*.pem
 sslcert/*.cnf
+config/development.json
+config/production.json

@@ -5,8 +5,8 @@ var mpd = require('mpd'),
     cmd = mpd.cmd;
 
 var client = mpd.connect({
-  port: config.get('mpd.host'),
-  host: config.get('mpd.port')
+  host: config.get('mpd.host'),
+  port: config.get('mpd.port')
 });
 
 var mpdInfo = {
